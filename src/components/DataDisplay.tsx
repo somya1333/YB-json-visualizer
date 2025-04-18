@@ -12,17 +12,21 @@ import { GemIcon } from "lucide-react";
 interface DataDisplayProps {
   data: {
     data: {
-      uuid: string;
-      master: {
-        eligible_products: string[];
+      data: {
+        uuid: string;
+        master: {
+          uuid: string;
+          eligible_products: string[];
+        };
       };
     };
   };
 }
 
 const DataDisplay = ({ data }: DataDisplayProps) => {
-  const { uuid } = data.data;
-  const { eligible_products } = data.data.master;
+  // Safely access nested properties
+  const uuid = data?.data?.data?.uuid || "No UUID";
+  const eligible_products = data?.data?.data?.master?.eligible_products || [];
 
   return (
     <div className="container mx-auto py-8 space-y-8">

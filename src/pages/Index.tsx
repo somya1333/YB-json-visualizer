@@ -11,8 +11,11 @@ const sampleData = {
           "edl"
         ]
       }
-    }
-  }
+    },
+    "success": true
+  },
+  "error": null,
+  "meta": null
 };
 
 const Index = () => {
