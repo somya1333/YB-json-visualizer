@@ -1,5 +1,5 @@
-
 import React, { useState } from "react";
+import { ApiResponse } from "@/services/api";
 import {
   Carousel,
   CarouselContent,
@@ -14,61 +14,17 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface DataDisplayProps {
-  data: {
-    data: {
-      data: {
-        uuid: string;
-        master: {
-          uuid: string;
-          eligible_products: string[];
-        };
-        uw: {
-          uuid: string;
-          key: string;
-          appliedDateNesfb: string;
-          ntcFlag: boolean;
-          policyVersion: string;
-          tuEnquiriesLast30Days: number;
-          totalActiveTradelines: number;
-          totalCurrentBalance: number;
-          totalEmiAmount: number;
-          enquiryData: Array<{
-            amount: number;
-            creditorName: string;
-            inquiryDate: string;
-            inquiryType: string;
-          }>;
-          activeTradelineData: Array<{
-            accountOpenedDate: string;
-            amountPastDue: number;
-            count30Plus12m: number;
-            creditorName: string;
-            currentBalance: number;
-            emi: number;
-            highBalance: number;
-            loanType: string;
-            max30Plus12m: number;
-            mob: number;
-            tenure: number;
-          }>;
-          touchPoint: string;
-        };
-      };
-    };
-  };
+  data: ApiResponse;
 }
 
 const DataDisplay = ({ data }: DataDisplayProps) => {
-  // Safely access nested properties
   const uuid = data?.data?.data?.uuid || "No UUID";
   const eligible_products = data?.data?.data?.master?.eligible_products || [];
   const uw = data?.data?.data?.uw;
 
-  // Define search states for enquiry data
   const [enquirySearchKey, setEnquirySearchKey] = useState<string>("");
   const [enquirySearchValue, setEnquirySearchValue] = useState<string>("");
-  
-  // Define search states for active tradeline data
+
   const [tradelineSearchKey, setTradelineSearchKey] = useState<string>("");
   const [tradelineSearchValue, setTradelineSearchValue] = useState<string>("");
 
@@ -84,17 +40,19 @@ const DataDisplay = ({ data }: DataDisplayProps) => {
     { key: "Touch Point", value: uw?.touchPoint },
   ];
 
-  // Get enquiry data keys for dropdown
+  const getObjectKeys = <T extends object>(obj: T): (keyof T)[] => {
+    if (!obj) return [];
+    return Object.keys(obj) as (keyof T)[];
+  };
+
   const enquiryKeys = uw?.enquiryData && uw.enquiryData.length > 0 
-    ? Object.keys(uw.enquiryData[0]) 
+    ? getObjectKeys(uw.enquiryData[0])
     : [];
 
-  // Get tradeline data keys for dropdown
   const tradelineKeys = uw?.activeTradelineData && uw.activeTradelineData.length > 0 
-    ? Object.keys(uw.activeTradelineData[0]) 
+    ? getObjectKeys(uw.activeTradelineData[0])
     : [];
 
-  // Filter enquiry data based on search
   const filteredEnquiryData = React.useMemo(() => {
     if (!uw?.enquiryData || !enquirySearchKey || !enquirySearchValue) {
       return uw?.enquiryData || [];
@@ -111,7 +69,6 @@ const DataDisplay = ({ data }: DataDisplayProps) => {
     });
   }, [uw?.enquiryData, enquirySearchKey, enquirySearchValue]);
 
-  // Filter tradeline data based on search
   const filteredTradelineData = React.useMemo(() => {
     if (!uw?.activeTradelineData || !tradelineSearchKey || !tradelineSearchValue) {
       return uw?.activeTradelineData || [];
