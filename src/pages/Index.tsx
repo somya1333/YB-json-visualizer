@@ -165,8 +165,8 @@ const sampleData = {
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-white">
-      <header className="bg-white shadow-sm">
+    <div className="min-h-screen bg-gradient-to-br from-[#F1F0FB] to-[#D3E4FD]">
+      <header className="bg-white/70 backdrop-blur-sm shadow-sm">
         <div className="container mx-auto py-4">
           <h1 className="text-2xl font-bold text-gray-800">JSON Data Viewer</h1>
         </div>
